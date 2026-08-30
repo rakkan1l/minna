@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ava Bennett — Psychology Student</title>
+<meta name="description" content="Portfolio of Ava Bennett, first-year Psychology student exploring human behaviour, emotion, and the mind.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --bg:#ffffff;
+    --bg-alt:#faf9f7;
+    --ink:#0a0a0a;
+    --grey:#6f6f6c;
+    --grey-soft:#a6a6a2;
+    --border:#e5e4e0;
+    --border-strong:#0a0a0a;
+    --font:"Host Grotesk", ui-sans-serif, sans-serif, system-ui;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --max:1240px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  button, input, textarea{font-family:inherit;}
+
+  ::selection{background:#0a0a0a;color:#fff;}
+
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 6vw;}
+
+  /* ============ CUSTOM CURSOR ============ */
+  .cursor{
+    position:fixed;
+    top:0;left:0;
+    width:28px;height:28px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+    pointer-events:none;
+    z-index:9999;
+    transform:translate(-100px,-100px);
+    transition:font-size .25s var(--ease);
+    will-change:transform;
+  }
+  .cursor.cursor-hover{font-size:26px;}
+  .has-custom-cursor, .has-custom-cursor a, .has-custom-cursor button,
+  .has-custom-cursor input, .has-custom-cursor textarea, .has-custom-cursor .interest-card,
+  .has-custom-cursor .work-card{cursor:none;}
+
+  /* ============ REVEAL / SCROLL ANIMATION ============ */
+  [data-reveal]{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .9s var(--ease), transform .9s var(--ease);
+  }
+  [data-reveal].is-visible{opacity:1;transform:translateY(0);}
+  [data-reveal="mask"]{overflow:hidden;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+    [data-reveal]{opacity:1;transform:none;}
+  }
+
+  /* ============ NAV ============ */
+  .nav{
+    position:fixed;top:0;left:0;right:0;
+    z-index:500;
+    padding:28px 6vw;
+    display:flex;align-items:center;justify-content:space-between;
+    background:transparent;
+    border-bottom:1px solid transparent;
+    transition:background .5s var(--ease), border-color .5s var(--ease), padding .4s var(--ease);
+  }
+  .nav.nav-scrolled{
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    padding:18px 6vw;
+  }
+  .nav-mark{
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:.02em;
+  }
+  .nav-links{display:flex;gap:2.4vw;}
+  .nav-links a{
+    font-size:.78rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--grey);
+    position:relative;
+    padding-bottom:4px;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute;left:0;bottom:0;
+    width:0;height:1px;background:var(--ink);
+    transition:width .4s var(--ease);
+  }
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a:hover::after{width:100%;}
+  .nav-toggle{display:none;background:none;border:none;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;}
+
+  @media (max-width:800px){
+    .nav-links{
+      position:fixed;inset:0;
+      background:var(--bg);
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:28px;
+      transform:translateY(-100%);
+      transition:transform .5s var(--ease);
+    }
+    .nav-links.open{transform:translateY(0);}
+    .nav-links a{font-size:1.1rem;}
+    .nav-toggle{display:block;z-index:600;}
+  }
+
+  /* ============ SECTION LABEL ============ */
+  .eyebrow{
+    font-size:.75rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--grey);
+    display:flex;align-items:center;gap:14px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--ink);}
+
+  .section-index{
+    font-size:5.5rem;
+    font-weight:700;
+    color:transparent;
+    -webkit-text-stroke:1px var(--border);
+    line-height:1;
+    position:absolute;
+    top:-8px;left:0;
+    user-select:none;
+    z-index:0;
+  }
+
+  section{position:relative;padding:120px 0;}
+  @media (max-width:800px){section{padding:80px 0;}}
+
+  h1,h2,h3{font-weight:700;letter-spacing:-.02em;}
+
+  /* ============ HERO ============ */
+  .hero{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:4vw;
+    padding-top:140px;
+    padding-bottom:80px;
+  }
+  .hero-content{max-width:520px;}
+  .hero-eyebrow{
+    font-size:.78rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--grey);
+    margin-bottom:18px;
+    display:block;
+  }
+  .hero-name{
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:.02em;
+    margin-bottom:34px;
+    color:var(--grey);
+  }
+  .hero h1{
+    font-size:clamp(2.4rem,5.2vw,4.4rem);
+    line-height:1.05;
+    letter-spacing:-.03em;
+    margin-bottom:28px;
+  }
+  .hero p.lede{
+    font-size:1.05rem;
+    color:var(--grey);
+    line-height:1.7;
+    max-width:460px;
+    margin-bottom:44px;
+  }
+  .btn-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn{
+    position:relative;
+    padding:15px 30px;
+    font-size:.85rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    overflow:hidden;
+    border:1px solid var(--border-strong);
+    transition:color .45s var(--ease);
+    z-index:1;
+  }
+  .btn::before{
+    content:"";
+    position:absolute;inset:0;
+    background:var(--ink);
+    transform:translateY(101%);
+    transition:transform .45s var(--ease);
+    z-index:-1;
+  }
+  .btn:hover{color:#fff;}
+  .btn:hover::before{transform:translateY(0);}
+  .btn-ghost{border-color:var(--border);color:var(--grey);}
+  .btn-ghost:hover{color:#fff;border-color:var(--ink);}
+
+  .hero-art{
+    position:relative;
+    aspect-ratio:4/5;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hero-art svg{width:100%;height:100%;}
+  .hero-art::after{
+    content:"";
+    position:absolute;inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:.05;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+  }
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:120px;gap:56px;text-align:left;}
+    .hero-content{max-width:none;}
+    .hero-art{aspect-ratio:1/1;max-width:420px;margin:0 auto;}
+  }
+
+  /* ============ ABOUT ============ */
+  .about-grid{
+    display:grid;
+    grid-template-columns:.9fr 1.5fr;
+    gap:8vw;
+    position:relative;
+    padding-top:40px;
+  }
+  .about-grid h2{font-size:clamp(1.8rem,3.4vw,2.6rem);line-height:1.2;}
+  .about-body p{color:var(--grey);font-size:1.02rem;line-height:1.85;margin-bottom:20px;max-width:560px;}
+  .about-body p strong{color:var(--ink);font-weight:600;}
+  @media (max-width:900px){.about-grid{grid-template-columns:1fr;gap:32px;}}
+
+  /* ============ EDUCATION ============ */
+  .edu-card{
+    border:1px solid var(--border);
+    padding:52px 6vw;
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:40px;
+    position:relative;
+  }
+  .edu-card .edu-main{border-left:2px solid var(--ink);padding-left:24px;}
+  .edu-label{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--grey-soft);margin-bottom:10px;}
+  .edu-value{font-size:1.3rem;font-weight:600;margin-bottom:4px;}
+  .edu-sub{color:var(--grey);font-size:.95rem;}
+  .edu-progress{display:flex;flex-direction:column;justify-content:center;gap:10px;}
+  .edu-bar{height:1px;background:var(--border);position:relative;}
+  .edu-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:25%;background:var(--ink);}
+  @media (max-width:800px){.edu-card{grid-template-columns:1fr;gap:26px;padding:40px 7vw;}}
+
+  /* ============ INTERESTS ============ */
+  .interest-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    margin-top:40px;
+  }
+  .interest-card{
+    background:var(--bg);
+    padding:56px 44px;
+    position:relative;
+    overflow:hidden;
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    transition:background .5s var(--ease);
+  }
+  .interest-word{
+    position:absolute;
+    top:-6px;left:-4px;
+    font-size:6.5rem;
+    font-weight:800;
+    letter-spacing:-.03em;
+    color:var(--border);
+    opacity:0;
+    filter:blur(2px);
+    transform:translateY(10px) scale(1.03);
+    transition:opacity .6s var(--ease), transform .6s var(--ease);
+    pointer-events:none;
+    white-space:nowrap;
+  }
+  .interest-card:hover .interest-word{opacity:1;transform:translateY(0) scale(1);}
+  .interest-icon{
+    width:34px;height:34px;
+    margin-bottom:18px;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .5s var(--ease) .05s, transform .5s var(--ease) .05s;
+  }
+  .interest-card:hover .interest-icon{opacity:1;transform:translateY(0);}
+  .interest-num{font-size:.75rem;color:var(--grey-soft);letter-spacing:.1em;margin-bottom:14px;position:relative;z-index:1;}
+  .interest-card h3{font-size:1.35rem;margin-bottom:10px;position:relative;z-index:1;}
+  .interest-card p{color:var(--grey);font-size:.95rem;line-height:1.6;position:relative;z-index:1;max-width:320px;}
+  @media (max-width:800px){
+    .interest-grid{grid-template-columns:1fr;}
+    .interest-card{padding:40px 7vw;min-height:auto;}
+    .interest-word{font-size:4rem;}
+  }
+
+  /* ============ SKILLS ============ */
+  .skills-wrap{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px;}
+  .skill-tag{
+    border:1px solid var(--border-strong);
+    padding:12px 22px;
+    font-size:.85rem;
+    letter-spacing:.03em;
+    transition:background .35s var(--ease), color .35s var(--ease);
+  }
+  .skill-tag:hover{background:var(--ink);color:#fff;}
+
+  /* ============ WORK ============ */
+  .work-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    margin-top:40px;
+  }
+  .work-card{
+    background:var(--bg);
+    padding:44px 34px;
+    display:flex;flex-direction:column;
+    justify-content:space-between;
+    min-height:280px;
+    transition:background .4s var(--ease);
+  }
+  .work-card:hover{background:var(--bg-alt);}
+  .work-year{font-size:.75rem;color:var(--grey-soft);letter-spacing:.1em;margin-bottom:20px;}
+  .work-card h3{font-size:1.2rem;margin-bottom:12px;line-height:1.3;}
+  .work-card p{color:var(--grey);font-size:.9rem;line-height:1.6;margin-bottom:28px;}
+  .work-link{
+    font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:8px;
+    border-bottom:1px solid var(--border-strong);
+    padding-bottom:4px;
+    align-self:flex-start;
+    transition:gap .3s var(--ease);
+  }
+  .work-link:hover{gap:14px;}
+  @media (max-width:900px){.work-grid{grid-template-columns:1fr;}}
+
+  /* ============ JOURNEY ============ */
+  .journey{position:relative;margin-top:50px;padding-left:40px;}
+  .journey::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--border);}
+  .journey-item{position:relative;padding-bottom:64px;}
+  .journey-item:last-child{padding-bottom:0;}
+  .journey-item::before{
+    content:"";position:absolute;left:-40px;top:4px;
+    width:11px;height:11px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--ink);
+  }
+  .journey-item.active::before{background:var(--ink);}
+  .journey-tag{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey-soft);margin-bottom:8px;}
+  .journey-item h3{font-size:1.4rem;margin-bottom:8px;}
+  .journey-item p{color:var(--grey);max-width:520px;line-height:1.7;}
+
+  /* ============ GOALS ============ */
+  .goals{
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    padding:160px 0;
+  }
+  .goals-bg{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    font-size:min(22vw,16rem);
+    font-weight:800;
+    color:transparent;
+    -webkit-text-stroke:1px var(--border);
+    letter-spacing:-.03em;
+    white-space:nowrap;
+    z-index:0;
+    user-select:none;
+  }
+  .goals-inner{position:relative;z-index:1;max-width:760px;margin:0 auto;}
+  .goals p.statement{
+    font-size:clamp(1.5rem,3.4vw,2.5rem);
+    font-weight:600;
+    line-height:1.4;
+    letter-spacing:-.01em;
+  }
+
+  /* ============ CONTACT ============ */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:.8fr 1.2fr;
+    gap:8vw;
+    margin-top:50px;
+  }
+  .contact-info-item{border-top:1px solid var(--border);padding:22px 0;}
+  .contact-info-item .edu-label{margin-bottom:8px;}
+  .contact-info-item a, .contact-info-item span{font-size:1.05rem;}
+  .contact-info-item a:hover{color:var(--grey);}
+
+  .form-row{margin-bottom:26px;}
+  .form-row label{
+    display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--grey-soft);margin-bottom:10px;
+  }
+  .form-row input, .form-row textarea{
+    width:100%;
+    border:none;border-bottom:1px solid var(--border);
+    background:transparent;
+    padding:10px 2px;
+    font-size:1rem;
+    color:var(--ink);
+    transition:border-color .3s var(--ease);
+  }
+  .form-row input:focus, .form-row textarea:focus{outline:none;border-color:var(--ink);}
+  .form-row textarea{resize:vertical;min-height:100px;}
+  .form-note{font-size:.82rem;color:var(--grey-soft);margin-top:18px;}
+  @media (max-width:900px){.contact-grid{grid-template-columns:1fr;gap:48px;}}
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top:1px solid var(--border);
+    padding:34px 0;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:.8rem;color:var(--grey-soft);
+    flex-wrap:wrap;gap:12px;
+  }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--ink);outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"><span>🧠</span></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <a href="#home" class="nav-mark">A.B.</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">Menu</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" class="nav-link">About</a></li>
+    <li><a href="#education" class="nav-link">Education</a></li>
+    <li><a href="#interests" class="nav-link">Interests</a></li>
+    <li><a href="#work" class="nav-link">Work</a></li>
+    <li><a href="#journey" class="nav-link">Journey</a></li>
+    <li><a href="#contact" class="nav-link">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:4vw;align-items:center;width:100%;">
+    <div class="hero-content" data-reveal>
+      <span class="hero-eyebrow">Psychology Student</span>
+      <div class="hero-name">Ava Bennett</div>
+      <h1 data-reveal>Understanding people begins with understanding the mind.</h1>
+      <p class="lede">A first-year Psychology student exploring human behaviour, emotions, thoughts, communication, and the science behind how people understand themselves and others.</p>
+      <div class="btn-row">
+        <a href="#about" class="btn">About Me</a>
+        <a href="#journey" class="btn btn-ghost">My Journey</a>
+      </div>
+    </div>
+
+    <div class="hero-art" data-reveal>
+      <svg viewBox="0 0 640 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Abstract monochrome illustration of a thoughtful figure in profile, with neural lines and branches emerging from the mind">
+        <defs>
+          <linearGradient id="silhouetteFade" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#0a0a0a" stop-opacity="1"/>
+            <stop offset="58%" stop-color="#0a0a0a" stop-opacity="0.92"/>
+            <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+          </linearGradient>
+          <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="28"/>
+          </filter>
+        </defs>
+
+        <!-- soft cloud forms -->
+        <ellipse cx="150" cy="300" rx="150" ry="70" fill="#0a0a0a" opacity="0.04" filter="url(#softBlur)"/>
+        <ellipse cx="500" cy="520" rx="170" ry="80" fill="#0a0a0a" opacity="0.035" filter="url(#softBlur)"/>
+        <ellipse cx="300" cy="660" rx="200" ry="90" fill="#0a0a0a" opacity="0.03" filter="url(#softBlur)"/>
+
+        <!-- double-exposure fragment silhouette -->
+        <path transform="translate(46,-14) scale(0.94)" opacity="0.055" fill="#0a0a0a" d="M330 140 C290 140 270 175 268 215 C266 240 255 250 235 268 C250 280 258 285 258 292 C258 300 248 302 252 312 C256 328 270 335 285 350 C300 365 305 385 300 405 C296 430 285 445 265 460 C220 480 170 500 140 540 L120 800 L560 800 L470 620 C460 560 450 500 430 460 C415 430 400 410 395 385 C405 350 415 320 410 285 C405 250 395 210 375 180 C365 160 350 145 330 140 Z"/>
+
+        <!-- main silhouette, fading into thought at the crown -->
+        <path fill="url(#silhouetteFade)" d="M330 140 C290 140 270 175 268 215 C266 240 255 250 235 268 C250 280 258 285 258 292 C258 300 248 302 252 312 C256 328 270 335 285 350 C300 365 305 385 300 405 C296 430 285 445 265 460 C220 480 170 500 140 540 L120 800 L560 800 L470 620 C460 560 450 500 430 460 C415 430 400 410 395 385 C405 350 415 320 410 285 C405 250 395 210 375 180 C365 160 350 145 330 140 Z"/>
+
+        <!-- neural network within the fading crown -->
+        <g stroke="#0a0a0a" stroke-width="0.75" opacity="0.35" fill="none">
+          <line x1="300" y1="175" x2="335" y2="160"/>
+          <line x1="335" y1="160" x2="360" y2="185"/>
+          <line x1="300" y1="175" x2="290" y2="205"/>
+          <line x1="360" y1="185" x2="345" y2="215"/>
+          <line x1="290" y1="205" x2="320" y2="225"/>
+          <line x1="320" y1="225" x2="345" y2="215"/>
+          <line x1="335" y1="160" x2="310" y2="200"/>
+        </g>
+        <g fill="#0a0a0a" opacity="0.55">
+          <circle cx="300" cy="175" r="2.3"/>
+          <circle cx="335" cy="160" r="2.3"/>
+          <circle cx="360" cy="185" r="2.3"/>
+          <circle cx="290" cy="205" r="2.3"/>
+          <circle cx="345" cy="215" r="2.3"/>
+          <circle cx="320" cy="225" r="2.3"/>
+          <circle cx="310" cy="200" r="2"/>
+        </g>
+
+        <!-- branches growing from the mind -->
+        <g stroke="#0a0a0a" stroke-width="1.4" fill="none" opacity="0.7" stroke-linecap="round">
+          <path d="M334 142 C330 105 345 80 340 42"/>
+          <path d="M334 142 C355 110 350 85 385 55"/>
+          <path d="M334 142 C310 100 315 70 290 35"/>
+          <path d="M340 42 C332 30 320 26 312 14"/>
+          <path d="M385 55 C398 48 405 36 420 30"/>
+        </g>
+        <g fill="#0a0a0a" opacity="0.75">
+          <circle cx="340" cy="42" r="3"/>
+          <circle cx="385" cy="55" r="3"/>
+          <circle cx="290" cy="35" r="3"/>
+          <circle cx="312" cy="14" r="2.4"/>
+          <circle cx="420" cy="30" r="2.4"/>
+        </g>
+
+        <!-- birds, freedom of thought -->
+        <g stroke="#0a0a0a" stroke-width="1.3" fill="none" opacity="0.55" stroke-linecap="round">
+          <path d="M470 100 q10 -12 20 0 q10 -12 20 0"/>
+          <path d="M510 145 q8 -9 16 0 q8 -9 16 0"/>
+          <path d="M440 70 q6 -7 12 0 q6 -7 12 0"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">01</div>
+      <div class="eyebrow" data-reveal>About Me</div>
+    </div>
+    <div class="about-grid">
+      <h2 data-reveal>A first-year student learning to read the mind.</h2>
+      <div class="about-body">
+        <p data-reveal><strong>I'm Ava, a first-year Psychology student</strong> who has always been drawn to the quiet questions behind people's behaviour — why we say what we say, feel what we feel, and remember what we remember.</p>
+        <p data-reveal>My interest in psychology started with everyday observation: watching how people communicate differently under pressure, how emotions shape decisions, and how much of our behaviour is shaped by things we rarely notice. That curiosity is what brought me to this degree.</p>
+        <p data-reveal>I'm still early in my studies, but I'm building a foundation in research methods, human behaviour, and critical thinking — and I'm genuinely excited to keep learning about the science behind how people understand themselves and each other.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDUCATION ============ -->
+<section id="education" style="background:var(--bg-alt);">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">02</div>
+      <div class="eyebrow" data-reveal>Education</div>
+    </div>
+    <div class="edu-card" data-reveal>
+      <div class="edu-main">
+        <div class="edu-label">Degree</div>
+        <div class="edu-value">B.Sc. Psychology</div>
+        <div class="edu-sub">University Name</div>
+      </div>
+      <div class="edu-main" style="border-color:var(--border);">
+        <div class="edu-label">Status</div>
+        <div class="edu-value">First Year</div>
+        <div class="edu-sub">Started 2026</div>
+      </div>
+      <div class="edu-progress">
+        <div class="edu-label">Expected Graduation</div>
+        <div class="edu-value" style="margin-bottom:12px;">2030</div>
+        <div class="edu-bar"></div>
+        <div class="edu-sub">Year 01 of 04</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTERESTS ============ -->
+<section id="interests">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">03</div>
+      <div class="eyebrow" data-reveal>Areas of Interest</div>
+    </div>
+    <h2 data-reveal style="font-size:clamp(1.8rem,3.4vw,2.6rem);max-width:640px;margin-bottom:8px;">What I find myself drawn back to, again and again.</h2>
+
+    <div class="interest-grid" data-reveal>
+      <div class="interest-card">
+        <span class="interest-word">BEHAVIOUR</span>
+        <svg class="interest-icon" viewBox="0 0 40 40" fill="none" stroke="#0a0a0a" stroke-width="1.4"><circle cx="14" cy="12" r="5"/><path d="M6 32c0-7 4.5-11 8-11s8 4 8 11"/><circle cx="30" cy="16" r="3.6" opacity=".6"/><path d="M25 32c0-5 2.5-8.5 5-8.5s5 3.5 5 8.5" opacity=".6"/></svg>
+        <div class="interest-num">01</div>
+        <h3>Human Behaviour</h3>
+        <p>Understanding why people think and behave differently.</p>
+      </div>
+      <div class="interest-card">
+        <span class="interest-word">IDENTITY</span>
+        <svg class="interest-icon" viewBox="0 0 40 40" fill="none" stroke="#0a0a0a" stroke-width="1.4"><circle cx="10" cy="14" r="4"/><circle cx="30" cy="12" r="4"/><circle cx="20" cy="30" r="4"/><path d="M13 17l5 9M27 15l-5 9M14 13h12"/></svg>
+        <div class="interest-num">02</div>
+        <h3>Social Psychology</h3>
+        <p>Exploring how people influence and interact with one another.</p>
+      </div>
+      <div class="interest-card">
+        <span class="interest-word">EMOTION</span>
+        <svg class="interest-icon" viewBox="0 0 40 40" fill="none" stroke="#0a0a0a" stroke-width="1.4"><path d="M4 22c4-10 8 8 12-2s8 8 12-2s6 4 8 0"/></svg>
+        <div class="interest-num">03</div>
+        <h3>Emotions &amp; Mental Processes</h3>
+        <p>Learning how thoughts and emotions shape everyday life.</p>
+      </div>
+      <div class="interest-card">
+        <span class="interest-word">MIND</span>
+        <svg class="interest-icon" viewBox="0 0 40 40" fill="none" stroke="#0a0a0a" stroke-width="1.4"><path d="M8 8v10c0 8 6 14 12 14s12-6 12-14V8" opacity=".6"/><circle cx="14" cy="14" r="1.6" fill="#0a0a0a" stroke="none"/><circle cx="22" cy="10" r="1.6" fill="#0a0a0a" stroke="none"/><circle cx="27" cy="18" r="1.6" fill="#0a0a0a" stroke="none"/></svg>
+        <div class="interest-num">04</div>
+        <h3>Developmental Psychology</h3>
+        <p>Understanding how people grow and change throughout life.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills" style="background:var(--bg-alt);">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">04</div>
+      <div class="eyebrow" data-reveal>Skills</div>
+    </div>
+    <h2 data-reveal style="font-size:clamp(1.8rem,3.4vw,2.6rem);max-width:600px;">Capabilities I'm building through study and practice.</h2>
+    <div class="skills-wrap" data-reveal>
+      <span class="skill-tag">Communication</span>
+      <span class="skill-tag">Observation</span>
+      <span class="skill-tag">Critical Thinking</span>
+      <span class="skill-tag">Research</span>
+      <span class="skill-tag">Presentation</span>
+      <span class="skill-tag">Active Listening</span>
+      <span class="skill-tag">Teamwork</span>
+      <span class="skill-tag">Academic Writing</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section id="work">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">05</div>
+      <div class="eyebrow" data-reveal>College Work</div>
+    </div>
+    <h2 data-reveal style="font-size:clamp(1.8rem,3.4vw,2.6rem);max-width:600px;">Early coursework and assignments.</h2>
+
+    <div class="work-grid" data-reveal>
+      <div class="work-card">
+        <div>
+          <div class="work-year">2026</div>
+          <h3>Psychology Presentation</h3>
+          <p>A class presentation introducing core theories of human behaviour and cognition.</p>
+        </div>
+        <a href="#" class="work-link">View Project →</a>
+      </div>
+      <div class="work-card">
+        <div>
+          <div class="work-year">2026</div>
+          <h3>Behaviour Observation Assignment</h3>
+          <p>A structured observational study examining behaviour patterns in a naturalistic setting.</p>
+        </div>
+        <a href="#" class="work-link">View Project →</a>
+      </div>
+      <div class="work-card">
+        <div>
+          <div class="work-year">2026</div>
+          <h3>Research &amp; Literature Review</h3>
+          <p>A review of academic literature on a chosen topic in introductory psychology.</p>
+        </div>
+        <a href="#" class="work-link">View Project →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOURNEY ============ -->
+<section id="journey" style="background:var(--bg-alt);">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">06</div>
+      <div class="eyebrow" data-reveal>My Journey</div>
+    </div>
+    <h2 data-reveal style="font-size:clamp(1.8rem,3.4vw,2.6rem);max-width:600px;margin-bottom:12px;">Where I've started, and where I'm headed.</h2>
+
+    <div class="journey" data-reveal>
+      <div class="journey-item active">
+        <div class="journey-tag">Year 01</div>
+        <h3>Started Psychology Degree</h3>
+        <p>Began my studies with a foundation in research methods, psychological theory, and academic writing.</p>
+      </div>
+      <div class="journey-item">
+        <div class="journey-tag">Learning</div>
+        <h3>Exploring the Fundamentals</h3>
+        <p>Studying the fundamentals of human behaviour, cognition, and the major schools of psychological thought.</p>
+      </div>
+      <div class="journey-item">
+        <div class="journey-tag">Growing</div>
+        <h3>Building Core Skills</h3>
+        <p>Developing communication, observation, and research skills through coursework and group projects.</p>
+      </div>
+      <div class="journey-item">
+        <div class="journey-tag">Future</div>
+        <h3>Continuing to Explore</h3>
+        <p>Looking ahead to discover which areas of psychology inspire me most as my degree progresses.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GOALS ============ -->
+<section class="goals" id="goals">
+  <div class="goals-bg" aria-hidden="true">GROWTH</div>
+  <div class="wrap goals-inner">
+    <div class="eyebrow" data-reveal style="justify-content:center;">07 — Goals</div>
+    <p class="statement" data-reveal>"My goal is to keep learning, questioning, observing, and understanding people more deeply through psychology."</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div style="position:relative;">
+      <div class="section-index">08</div>
+      <div class="eyebrow" data-reveal>Contact</div>
+    </div>
+    <h2 data-reveal style="font-size:clamp(1.8rem,3.4vw,2.6rem);max-width:600px;margin-bottom:8px;">Let's talk about psychology, or anything else.</h2>
+
+    <div class="contact-grid">
+      <div data-reveal>
+        <div class="contact-info-item">
+          <div class="edu-label">Email</div>
+          <a href="mailto:hello@avabennett.com">hello@avabennett.com</a>
+        </div>
+        <div class="contact-info-item">
+          <div class="edu-label">LinkedIn</div>
+          <a href="#" target="_blank" rel="noopener">linkedin.com/in/avabennett</a>
+        </div>
+        <div class="contact-info-item">
+          <div class="edu-label">Location</div>
+          <span>City, Country</span>
+        </div>
+      </div>
+
+      <form data-reveal id="contactForm">
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required>
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+        </div>
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+        <button type="submit" class="btn">Let's Connect</button>
+        <p class="form-note" id="formNote">This form is a placeholder — connect it to your email or a form service to receive messages.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;width:100%;flex-wrap:wrap;gap:12px;">
+    <span>© 2026 Ava Bennett</span>
+    <span>Psychology Student Portfolio</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* -------- custom cursor -------- */
+  var cursor = document.getElementById('cursor');
+  var isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (isFinePointer) {
+    document.body.classList.add('has-custom-cursor');
+    var mouseX = -100, mouseY = -100, curX = -100, curY = -100;
+    window.addEventListener('mousemove', function(e){
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function loop(){
+      curX += (mouseX - curX) * 0.2;
+      curY += (mouseY - curY) * 0.2;
+      cursor.style.transform = 'translate(' + (curX - 14) + 'px,' + (curY - 14) + 'px)';
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    var hoverSelector = 'a, button, .interest-card, .work-card, .skill-tag, input, textarea';
+    document.addEventListener('mouseover', function(e){
+      if (e.target.closest(hoverSelector)) cursor.classList.add('cursor-hover');
+    });
+    document.addEventListener('mouseout', function(e){
+      if (e.target.closest(hoverSelector)) cursor.classList.remove('cursor-hover');
+    });
+  } else {
+    cursor.style.display = 'none';
+  }
+
+  /* -------- scroll reveal -------- */
+  var revealEls = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* -------- nav scroll state -------- */
+  var nav = document.getElementById('nav');
+  function onScroll(){
+    nav.classList.toggle('nav-scrolled', window.scrollY > 40);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* -------- mobile nav toggle -------- */
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', function(){
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){ navLinks.classList.remove('open'); });
+  });
+
+  /* -------- subtle hero parallax -------- */
+  var heroArt = document.querySelector('.hero-art');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (heroArt && !reducedMotion) {
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY;
+      if (y < window.innerHeight) {
+        heroArt.style.transform = 'translateY(' + (y * 0.06) + 'px)';
+      }
+    }, { passive: true });
+  }
+
+  /* -------- contact form (no backend) -------- */
+  var form = document.getElementById('contactForm');
+  var note = document.getElementById('formNote');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    note.textContent = 'Thanks — this is a static demo, so nothing was actually sent. Connect the form to your email or a service like Formspree to make it live.';
+  });
+})();
+</script>
+
+</body>
+</html>
